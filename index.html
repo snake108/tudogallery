@@ -48,7 +48,42 @@
     .grid-item img { width: 100%; display: block; border-radius: 4px; }
     .grid-item .overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 10px 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); opacity: 0; transition: 0.2s; color: white; pointer-events: none; }
     .grid-item:hover .overlay { opacity: 1; }
+
+    /* 毛玻璃隐私效果 */
+    .grid-item.blurred img { filter: blur(20px); }
+    .grid-item.blurred::before {
+      content: '点击查看';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .grid-item.blurred:hover::before { background: rgba(0,0,0,0.7); }
     
+    /* 已解除模糊的图片提示 */
+    .grid-item.privacy-item:not(.blurred)::before {
+      content: '点击模糊';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      z-index: 10;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .grid-item.privacy-item:not(.blurred):hover::before { opacity: 1; }
+
     /* 灯箱 */
     .lightbox { position: fixed; inset: 0; background: var(--overlay); z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
     .lightbox.show { display: flex; opacity: 1; }
@@ -99,34 +134,42 @@
   // ==========================================
   // 1. 数据配置区 (每次更新图片修改这里)
   // ==========================================
+   // 配置说明:
+  // - blur: true  表示该图片会显示毛玻璃效果（隐私保护）
+  // - blur: false 或不设置  表示正常显示
   const worksData = [
  {
       title: "1",
       category: "draw",
       year: "2026",
       src: "images/64f9851cfa2fcbadb8439b497aaf07d3.jpg",  // 图片必须放在 images 文件夹
-      desc: "睡着的人"
+      desc: "睡着的人",
+      blur: true
     },
      {
       title: "饭",
       category: "draw",
       year: "2026",
       src: "images/6424d8ab4ba8b8188e798bfc66fd9457.jpg",  // 图片必须放在 images 文件夹
-      desc: "余生盖饭"
+      desc: "余生盖饭",
+      blur: false
+      
     },
     {
       title: "旋风土豆",
       category: "draw",
       year: "2026",
       src: "images/2b9ab127ebe89a5a1b82013aac380c21.jpg",  // 图片必须放在 images 文件夹
-      desc: ""
+      desc: "",
+      blur: false
     },
     {
       title: "黑色方脸大叔",
       category: "draw",
       year: "2026",
       src: "images/blackface.jpg",  // 图片必须放在 images 文件夹
-      desc: "在路上遇到的人，想必他的工作也很辛苦"
+      desc: "在路上遇到的人，想必他的工作也很辛苦",
+      blur: false
     },
     
  {
@@ -134,42 +177,48 @@
       category: "draw",
       year: "2026",
       src: "images/7.jpg",  // 图片必须放在 images 文件夹
-      desc: " "
+      desc: " ",
+      blur: false
     },
     {
       title: "被打到",
       category: "四格漫画",
       year: "2025",
       src: "images/9.jpg",  // 图片必须放在 images 文件夹
-      desc: " "
+      desc: " ",
+      blur: false
     },
      {
       title: "树",
       category: "draw",
       year: "2026",
       src: "images/tree.jpg",  // 图片必须放在 images 文件夹
-      desc: " "
+      desc: " ",
+      blur: false
     },
     {
       title: "天才",
       category: "四格漫画",
       year: "2026",
       src: "images/10.jpg",  // 图片必须放在 images 文件夹
-      desc: " "
+      desc: " ",
+      blur: false
     },
    {
       title: "ZIRVANA",
       category: "draw",
       year: "2026",
       src: "images/2a4bd75da990d7871524bfb54fc07954.jpg",  // 图片必须放在 images 文件夹
-      desc: "游泳的时候像个卤蛋"
+      desc: "游泳的时候像个卤蛋",
+      blur: false
     },
     {
       title: "REANIMAL第二次",
       category: "draw",
       year: "2026",
       src: "images/demo1.jpg",  // 图片必须放在 images 文件夹
-      desc: " "
+      desc: " ",
+      blur: false
     },
     // 第二次更新（2-10）
     {
@@ -177,35 +226,40 @@
       category: "draw",
       year: "2026",
       src: "images/2.jpg",  // 图片必须放在 images 文件夹
-      desc: ""
+      desc: "",
+      blur: false
     },
     {
       title: "HUGEWOMAN",
       category: "draw",
       year: "2026",
       src: "images/3.jpg",  // 图片必须放在 images 文件夹
-      desc: ""
+      desc: "",
+      blur: true
     },
     {
       title: "REANIMAL第一次",
       category: "draw",
       year: "2026",
       src: "images/4.jpg",  // 图片必须放在 images 文件夹
-      desc: "一直在躲！"
+      desc: "一直在躲！",
+      blur: false
     },
     {
       title: "二月十四",
       category: "draw",
       year: "2026",
       src: "images/5.jpg",  // 图片必须放在 images 文件夹
-      desc: " "
+      desc: " ",
+      blur: true
     },
     {
       title: "拉伸",
       category: "draw",
       year: "2026",
       src: "images/6.jpg",  // 图片必须放在 images 文件夹
-      desc: " "
+      desc: " ",
+      blur: true
     },
    
     {
@@ -214,6 +268,7 @@
       year: "2026",
       src: "images/8.jpg",  // 图片必须放在 images 文件夹
       desc: " "
+      blur: true,
     },
  
     
@@ -273,6 +328,21 @@
       </div>
     `).join('');
   }
+  
+// 处理图片点击
+  window.handleItemClick = (idx, event) => {
+    const item = event.currentTarget;
+    const isPrivacyItem = item.dataset.privacy === 'true';
+    
+    // 如果是隐私图片
+    if (isPrivacyItem) {
+      // 切换毛玻璃效果
+      item.classList.toggle('blurred');
+      return;
+    }
+    // 普通图片打开灯箱
+    openLightbox(idx);
+  };
 
   // 交互功能
   window.filterBy = (cat) => {
