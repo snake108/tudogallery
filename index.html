@@ -45,10 +45,10 @@
     .masonry { column-width: var(--col-width); column-gap: var(--col-gap); padding: 0 20px; }
     .grid-item { break-inside: avoid; margin-bottom: var(--row-gap); position: relative; cursor: zoom-in; transition: transform 0.3s; }
     .grid-item:hover { transform: scale(1.02); z-index: 2; }
-    .grid-item img { width: 100%; display: block; border-radius: 4px; }
+    .grid-item img { width: 100%; display: block; border-radius: 4px; transition: filter 0.3s ease; }
     .grid-item .overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 10px 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); opacity: 0; transition: 0.2s; color: white; pointer-events: none; }
     .grid-item:hover .overlay { opacity: 1; }
-
+    
     /* 毛玻璃隐私效果 */
     .grid-item.blurred img { filter: blur(20px); }
     .grid-item.blurred::before {
@@ -83,7 +83,7 @@
       transition: opacity 0.2s;
     }
     .grid-item.privacy-item:not(.blurred):hover::before { opacity: 1; }
-
+    
     /* 灯箱 */
     .lightbox { position: fixed; inset: 0; background: var(--overlay); z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
     .lightbox.show { display: flex; opacity: 1; }
@@ -134,10 +134,11 @@
   // ==========================================
   // 1. 数据配置区 (每次更新图片修改这里)
   // ==========================================
-   // 配置说明:
+  // 配置说明:
   // - blur: true  表示该图片会显示毛玻璃效果（隐私保护）
   // - blur: false 或不设置  表示正常显示
   const worksData = [
+    
  {
       title: "1",
       category: "draw",
@@ -270,10 +271,8 @@
       desc: " "
       blur: true,
     },
- 
-    
-    
     // 复制上面的 { ... }, 来添加新图片
+    // 在需要隐私保护的图片上添加 blur: true
   ];
 
   // ==========================================
@@ -319,7 +318,7 @@
     }
 
     grid.innerHTML = filteredWorks.map((w, i) => `
-      <div class="grid-item" onclick="openLightbox(${i})">
+      <div class="grid-item${w.blur ? ' blurred privacy-item' : ''}" onclick="handleItemClick(${i}, event)" data-privacy="${w.blur ? 'true' : 'false'}">
         <img src="${w.src}" loading="lazy" alt="${w.title}">
         <div class="overlay">
           <div style="font-weight:600">${w.title}</div>
@@ -328,8 +327,8 @@
       </div>
     `).join('');
   }
-  
-// 处理图片点击
+
+  // 处理图片点击
   window.handleItemClick = (idx, event) => {
     const item = event.currentTarget;
     const isPrivacyItem = item.dataset.privacy === 'true';
